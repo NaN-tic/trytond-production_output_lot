@@ -1,0 +1,89 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:production:"
+msgid ""
+"The \"When Output Lot is created?\" or \"Output Lot Sequence\" Production "
+"configuration params are empty."
+msgstr ""
+"No se han establecido los parámetros de la configuración de la producción "
+"\"¿Cuando se crean los lotes de salida?\" o \"Secuencia lotes salida\"."
+
+msgctxt "field:production.configuration,output_lot_creation:"
+msgid "When Output Lot is created?"
+msgstr "¿Cuando se crean los lotes de salida?"
+
+msgctxt "field:production.configuration,output_lot_sequence:"
+msgid "Output Lot Sequence"
+msgstr "Secuencia lotes de salida"
+
+msgctxt "field:production.configuration.company,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:production.configuration.company,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:production.configuration.company,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:production.configuration.company,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:production.configuration.company,output_lot_creation:"
+msgid "When Output Lot is created?"
+msgstr "¿Cuando se crean los lotes de salida?"
+
+msgctxt "field:production.configuration.company,output_lot_sequence:"
+msgid "Output Lot Sequence"
+msgstr "Secuencia lotes de salida"
+
+msgctxt "field:production.configuration.company,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:production.configuration.company,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:production.configuration.company,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "help:production.configuration,output_lot_creation:"
+msgid ""
+"The Production's state in which the Output Lot will be created "
+"automatically, if the Output Product is configured to require lot in "
+"production."
+msgstr ""
+"El estado de la producción en el cual se crearán automáticamente los lotes "
+"de salida, si el producto está configurado para requerir lotes en la "
+"producción."
+
+msgctxt "model:production.configuration.company,name:"
+msgid "Production Configuration by Company"
+msgstr "Configuración producción por empresa"
+
+msgctxt "selection:production.configuration,output_lot_creation:"
+msgid "Production in Running"
+msgstr "Producción en ejecución"
+
+msgctxt "selection:production.configuration,output_lot_creation:"
+msgid "Production is Done"
+msgstr "Producción realizada"
+
+msgctxt "selection:production.configuration.company,output_lot_creation:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:production.configuration.company,output_lot_creation:"
+msgid "Production in Running"
+msgstr "Producción en ejecución"
+
+msgctxt "selection:production.configuration.company,output_lot_creation:"
+msgid "Production is Done"
+msgstr "Producción realizada"

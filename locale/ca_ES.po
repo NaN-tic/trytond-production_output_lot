@@ -1,0 +1,88 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:production:"
+msgid ""
+"The \"When Output Lot is created?\" or \"Output Lot Sequence\" Production "
+"configuration params are empty."
+msgstr ""
+"No s'han establert els paràmetres de la configuració de la producció \"Quan "
+"es creen els lots de sortida?\" o \"Seqüència lots de sortida\"."
+
+msgctxt "field:production.configuration,output_lot_creation:"
+msgid "When Output Lot is created?"
+msgstr "Quan es creen els lots de sortida?"
+
+msgctxt "field:production.configuration,output_lot_sequence:"
+msgid "Output Lot Sequence"
+msgstr "Seqüència lots de sortida"
+
+msgctxt "field:production.configuration.company,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:production.configuration.company,create_date:"
+msgid "Create Date"
+msgstr "Data creació"
+
+msgctxt "field:production.configuration.company,create_uid:"
+msgid "Create User"
+msgstr "Usuari creació"
+
+msgctxt "field:production.configuration.company,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:production.configuration.company,output_lot_creation:"
+msgid "When Output Lot is created?"
+msgstr "Quan es creen els lots de sortida?"
+
+msgctxt "field:production.configuration.company,output_lot_sequence:"
+msgid "Output Lot Sequence"
+msgstr "Seqüència lots de sortida"
+
+msgctxt "field:production.configuration.company,rec_name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:production.configuration.company,write_date:"
+msgid "Write Date"
+msgstr "Data modificació"
+
+msgctxt "field:production.configuration.company,write_uid:"
+msgid "Write User"
+msgstr "Usuari modificació"
+
+msgctxt "help:production.configuration,output_lot_creation:"
+msgid ""
+"The Production's state in which the Output Lot will be created "
+"automatically, if the Output Product is configured to require lot in "
+"production."
+msgstr ""
+"L'estat de la producció en el qual es crearan els lots de sortida per "
+"aquells productes configurats per requerir lot a la producció."
+
+msgctxt "model:production.configuration.company,name:"
+msgid "Production Configuration by Company"
+msgstr "Configuración de la producció per empresa"
+
+msgctxt "selection:production.configuration,output_lot_creation:"
+msgid "Production in Running"
+msgstr "Producció en curs"
+
+msgctxt "selection:production.configuration,output_lot_creation:"
+msgid "Production is Done"
+msgstr "Producció realitzada"
+
+msgctxt "selection:production.configuration.company,output_lot_creation:"
+msgid ""
+msgstr " "
+
+msgctxt "selection:production.configuration.company,output_lot_creation:"
+msgid "Production in Running"
+msgstr "Producció en curs"
+
+msgctxt "selection:production.configuration.company,output_lot_creation:"
+msgid "Production is Done"
+msgstr "Producció realitzada"
