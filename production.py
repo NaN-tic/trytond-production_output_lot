@@ -116,8 +116,6 @@ class Production:
                 production.create_output_lots()
 
     @classmethod
-    @ModelView.button
-    @Workflow.transition('done')
     def done(cls, productions):
         pool = Pool()
         Config = pool.get('production.configuration')
