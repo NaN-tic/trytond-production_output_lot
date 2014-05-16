@@ -248,7 +248,6 @@ def suite():
         'test0120compute_bothmissingrate', 'test0130delete_cascade')
     for test in test_company.suite():
         if test not in suite and test.id().split('.')[-1] not in exclude_tests:
-            print "Adding company test '%s'" % test.id().split('.')[-1]
             suite.addTest(test)
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestCase))
     return suite
