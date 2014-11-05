@@ -11,9 +11,7 @@ from trytond.transaction import Transaction
 
 
 class TestCase(unittest.TestCase):
-    '''
-    Test module.
-    '''
+    'Test module'
 
     def setUp(self):
         trytond.tests.test_tryton.install_module('production_output_lot')
@@ -32,15 +30,11 @@ class TestCase(unittest.TestCase):
         self.user = POOL.get('res.user')
 
     def test0005views(self):
-        '''
-        Test views.
-        '''
+        'Test views'
         test_view('production_output_lot')
 
     def test0006depends(self):
-        '''
-        Test depends.
-        '''
+        'Test depends'
         test_depends()
 
     def test0010output_lot_creation(self):
