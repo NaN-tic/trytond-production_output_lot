@@ -3,10 +3,12 @@
 # copyright notices and license terms.
 import unittest
 from decimal import Decimal
+import doctest
 import trytond.tests.test_tryton
 from trytond.exceptions import UserError
 from trytond.tests.test_tryton import (POOL, DB_NAME, USER, CONTEXT,
     test_view, test_depends)
+from trytond.tests.test_tryton import doctest_setup, doctest_teardown
 from trytond.transaction import Transaction
 
 
@@ -226,16 +228,19 @@ class TestCase(unittest.TestCase):
 
 def suite():
     suite = trytond.tests.test_tryton.suite()
-    from trytond.modules.company.tests import test_company
-    exclude_tests = ('test0005views', 'test0006depends',
-        'test0020company_recursion', 'test0040user',
-        'test0020mon_grouping', 'test0040rate_unicity',
-        'test0060compute_nonfinite', 'test0070compute_nonfinite_worounding',
-        'test0080compute_same', 'test0090compute_zeroamount',
-        'test0100compute_zerorate', 'test0110compute_missingrate',
-        'test0120compute_bothmissingrate', 'test0130delete_cascade')
-    for test in test_company.suite():
-        if test not in suite and test.id().split('.')[-1] not in exclude_tests:
-            suite.addTest(test)
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestCase))
+    #from trytond.modules.company.tests import test_company
+    #exclude_tests = ('test0005views', 'test0006depends',
+    #    'test0020company_recursion', 'test0040user',
+    #    'test0020mon_grouping', 'test0040rate_unicity',
+    #    'test0060compute_nonfinite', 'test0070compute_nonfinite_worounding',
+    #    'test0080compute_same', 'test0090compute_zeroamount',
+    #    'test0100compute_zerorate', 'test0110compute_missingrate',
+    #    'test0120compute_bothmissingrate', 'test0130delete_cascade')
+    #for test in test_company.suite():
+    #    if test not in suite and test.id().split('.')[-1] not in exclude_tests:
+    #        suite.addTest(test)
+    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestCase))
+    suite.addTests(doctest.DocFileSuite('scenario_production_lot_sequence.rst',
+        setUp=doctest_setup, tearDown=doctest_teardown, encoding='utf-8',
+            optionflags=doctest.REPORT_ONLY_FIRST_FAILURE))
     return suite

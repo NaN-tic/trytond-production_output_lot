@@ -1,11 +1,11 @@
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
-from trytond.model import Model, ModelSQL, ModelView, Workflow, fields
+from trytond.model import Model, ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
-__all__ = ['Configuration', 'ConfigurationCompany', 'Production']
+__all__ = ['Configuration', 'ConfigurationCompany', 'Production', 'StockMove']
 __metaclass__ = PoolMeta
 
 _OUTPUT_LOT_CREATION = [
@@ -107,7 +107,7 @@ class Production:
         pool = Pool()
         Config = pool.get('production.configuration')
         config = Config(1)
-        if not config.output_lot_creation or not config.output_lot_sequence:
+        if not config.output_lot_creation:
             cls.raise_user_error('missing_output_lot_creation_config')
 
         super(Production, cls).run(productions)
@@ -120,7 +120,7 @@ class Production:
         pool = Pool()
         Config = pool.get('production.configuration')
         config = Config(1)
-        if not config.output_lot_creation or not config.output_lot_sequence:
+        if not config.output_lot_creation:
             cls.raise_user_error('missing_output_lot_creation_config')
 
         if config.output_lot_creation == 'done':
@@ -140,23 +140,38 @@ class Production:
                 continue
             if output.product.lot_is_required(output.from_location,
                     output.to_location):
-                lot = self.get_output_lot(output)
+                lot = output.get_production_output_lot()
                 lot.save()
                 output.lot = lot
                 output.save()
                 created_lots.append(lot)
         return created_lots
 
-    def get_output_lot(self, output):
+
+class StockMove:
+    __name__ = 'stock.move'
+
+    @classmethod
+    def __setup__(cls):
+        super(StockMove, cls).__setup__()
+        cls._error_messages.update({
+                'no_sequence':  ('There is not output lot sequence defined. '
+                    'Please define one in production configuration.'),
+                })
+
+    def get_production_output_lot(self):
         pool = Pool()
         Lot = pool.get('stock.lot')
         Sequence = pool.get('ir.sequence')
 
-        number = Sequence.get_id(self._get_output_lot_sequence(output).id)
-        lot = Lot(product=output.product, number=number)
+        if not self.production_output:
+            return
+
+        number = Sequence.get_id(self._get_output_lot_sequence().id)
+        lot = Lot(product=self.product, number=number)
 
         if hasattr(Lot, 'expiry_date'):
-            if output.product.expiry_time:
+            if self.product.expiry_time:
                 input_expiry_dates = [i.lot.expiry_date for i in self.inputs
                     if i.lot and i.lot.expiry_date]
                 if input_expiry_dates:
@@ -167,8 +182,14 @@ class Production:
                         lot.expiry_date = expiry_date
         return lot
 
-    def _get_output_lot_sequence(self, output):
+    def _get_output_lot_sequence(self):
         pool = Pool()
         Config = pool.get('production.configuration')
         config = Config(1)
+        if hasattr(self.product, 'lot_sequence_used'):
+            sequence = self.product.lot_sequence_used
+            if sequence:
+                return sequence
+        if not config.output_lot_sequence:
+            self.raise_user_error('no_sequence')
         return config.output_lot_sequence

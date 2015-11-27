@@ -9,4 +9,5 @@ def register():
         Configuration,
         ConfigurationCompany,
         Production,
+        StockMove,
         module='production_output_lot', type_='model')
