@@ -172,7 +172,8 @@ class StockMove:
 
         if hasattr(Lot, 'expiry_date'):
             if self.product.expiry_time:
-                input_expiry_dates = [i.lot.expiry_date for i in self.inputs
+                input_expiry_dates = [i.lot.expiry_date
+                    for i in self.production_output.inputs
                     if i.lot and i.lot.expiry_date]
                 if input_expiry_dates:
                     lot.expiry_date = min(input_expiry_dates)
