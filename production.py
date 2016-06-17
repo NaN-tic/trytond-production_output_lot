@@ -187,8 +187,8 @@ class StockMove:
         pool = Pool()
         Config = pool.get('production.configuration')
         config = Config(1)
-        if hasattr(self.product, 'lot_sequence_used'):
-            sequence = self.product.lot_sequence_used
+        if hasattr(self.product, 'lot_sequence'):
+            sequence = self.product.lot_sequence
             if sequence:
                 return sequence
         if not config.output_lot_sequence:
