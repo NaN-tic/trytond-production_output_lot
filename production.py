@@ -155,7 +155,7 @@ class StockMove:
     def __setup__(cls):
         super(StockMove, cls).__setup__()
         cls._error_messages.update({
-                'no_sequence':  ('There is not output lot sequence defined. '
+                'no_sequence': ('There is not output lot sequence defined. '
                     'Please define one in production configuration.'),
                 })
 
@@ -187,8 +187,8 @@ class StockMove:
         pool = Pool()
         Config = pool.get('production.configuration')
         config = Config(1)
-        if hasattr(self.product, 'lot_sequence_used'):
-            sequence = self.product.lot_sequence_used
+        if hasattr(self.product, 'lot_sequence'):
+            sequence = self.product.lot_sequence
             if sequence:
                 return sequence
         if not config.output_lot_sequence:
