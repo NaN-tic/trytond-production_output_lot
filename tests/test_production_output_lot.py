@@ -6,73 +6,55 @@ from decimal import Decimal
 import doctest
 import trytond.tests.test_tryton
 from trytond.exceptions import UserError
-from trytond.tests.test_tryton import (POOL, DB_NAME, USER, CONTEXT,
-    test_view, test_depends)
+from trytond.pool import Pool
+from trytond.tests.test_tryton import ModuleTestCase, with_transaction
 from trytond.tests.test_tryton import doctest_setup, doctest_teardown
-from trytond.transaction import Transaction
+from trytond.tests.test_tryton import doctest_checker
+
+from trytond.modules.company.tests import create_company, set_company
 
 
-class TestCase(unittest.TestCase):
+class TestCase(ModuleTestCase):
     'Test module'
+    module = 'production_output_lot'
 
-    def setUp(self):
-        trytond.tests.test_tryton.install_module('production_output_lot')
-        self.company = POOL.get('company.company')
-        self.lot_type = POOL.get('stock.lot.type')
-        self.location = POOL.get('stock.location')
-        self.model_data = POOL.get('ir.model.data')
-        self.product = POOL.get('product.product')
-        self.production = POOL.get('production')
-        self.production_config = POOL.get('production.configuration')
-        self.sequence = POOL.get('ir.sequence')
-        self.sequence_type = POOL.get('ir.sequence.type')
-        self.template = POOL.get('product.template')
-        self.template_lot_type = POOL.get('product.template-stock.lot.type')
-        self.uom = POOL.get('product.uom')
-        self.user = POOL.get('res.user')
-
-    def test0005views(self):
-        'Test views'
-        test_view('production_output_lot')
-
-    def test0006depends(self):
-        'Test depends'
-        test_depends()
-
+    @with_transaction()
     def test0010output_lot_creation(self):
-        '''
-        Test output lot creation.
-        '''
-        with Transaction().start(DB_NAME, USER,
-                context=CONTEXT):
-            company, = self.company.search([
-                    ('rec_name', '=', 'Dunder Mifflin'),
-                    ])
-            self.user.write([self.user(USER)], {
-                    'main_company': company.id,
-                    'company': company.id,
-                    })
-            Transaction().context['company'] = company.id
+        'Test output lot creation.'
+        pool = Pool()
+        LotType = pool.get('stock.lot.type')
+        Location = pool.get('stock.location')
+        ModelData = pool.get('ir.model.data')
+        Product = pool.get('product.product')
+        Production = pool.get('production')
+        ProductConfig = pool.get('production.configuration')
+        Sequence = pool.get('ir.sequence')
+        Sequence_type = pool.get('ir.sequence.type')
+        Template = pool.get('product.template')
+        Template_lot_type = pool.get('product.template-stock.lot.type')
+        Uom = pool.get('product.uom')
 
-            currency = company.currency
-            kg, = self.uom.search([('name', '=', 'Kilogram')])
-            production_group_id = self.model_data.get_id('production',
+        # Create Company
+        company = create_company()
+        with set_company(company):
+            kg, = Uom.search([('name', '=', 'Kilogram')])
+            production_group_id = ModelData.get_id('production',
                 'group_production')
-            config = self.production_config(1)
+            config = ProductConfig(1)
 
-            if not self.sequence_type.search([('code', '=', 'stock.lot')]):
-                self.sequence_type.create([{
+            if not Sequence_type.search([('code', '=', 'stock.lot')]):
+                Sequence_type.create([{
                             'name': 'Lot',
                             'code': 'stock.lot',
                             'groups': [
                                 ('add', [production_group_id]),
                                 ],
                             }])
-            sequences = self.sequence.search([
+            sequences = Sequence.search([
                     ('code', '=', 'stock.lot'),
                     ])
             if not sequences:
-                lot_sequence, = self.sequence.create([{
+                lot_sequence, = Sequence.create([{
                             'name': 'Lot',
                             'code': 'stock.lot',
                             'company': company.id,
@@ -81,7 +63,7 @@ class TestCase(unittest.TestCase):
                 lot_sequence = sequences[0]
 
             (input_template, output_template_wo_lot,
-                output_template_w_lot) = self.template.create([{
+                output_template_w_lot) = Template.create([{
                         'name': 'Input Product',
                         'type': 'goods',
                         'consumable': True,
@@ -105,30 +87,29 @@ class TestCase(unittest.TestCase):
                         'default_uom': kg.id,
                         }])
             (input_product, output_product_wo_lot,
-                output_product_w_lot) = self.product.create([{
+                output_product_w_lot) = Product.create([{
                         'template': input_template.id,
                         }, {
                         'template': output_template_wo_lot.id,
                         }, {
                         'template': output_template_w_lot.id,
                         }])
-            lot_types = self.lot_type.search([])
-            self.template_lot_type.create([{
+            lot_types = LotType.search([])
+            Template_lot_type.create([{
                     'template': output_template_w_lot.id,
                     'type': type_.id,
                     } for type_ in lot_types])
 
-            warehouse = self.location(self.production.default_warehouse())
+            warehouse = Location(Production.default_warehouse())
             storage_loc = warehouse.storage_location
             production_loc = warehouse.production_location
             self.assertTrue(
                 output_product_w_lot.lot_is_required(production_loc,
                     storage_loc))
 
-            production_wo_lot, production_w_lot = self.production.create([{
+            production_wo_lot, production_w_lot = Production.create([{
                     'product': output_product_wo_lot.id,
                     'quantity': 5,
-                    'company': company.id,
                     'inputs': [
                         ('create', [{
                                     'product': input_product.id,
@@ -136,7 +117,6 @@ class TestCase(unittest.TestCase):
                                     'quantity': 10,
                                     'from_location': storage_loc.id,
                                     'to_location': production_loc.id,
-                                    'company': company.id,
                                     }])
                         ],
                     'outputs': [
@@ -147,14 +127,11 @@ class TestCase(unittest.TestCase):
                                     'from_location': production_loc.id,
                                     'to_location': storage_loc.id,
                                     'unit_price': Decimal('10'),
-                                    'currency': currency.id,
-                                    'company': company.id,
                                     }])
                         ],
                     }, {
                     'product': output_product_w_lot.id,
                     'quantity': 5,
-                    'company': company.id,
                     'inputs': [
                         ('create', [{
                                     'product': input_product.id,
@@ -162,7 +139,6 @@ class TestCase(unittest.TestCase):
                                     'quantity': 10,
                                     'from_location': storage_loc.id,
                                     'to_location': production_loc.id,
-                                    'company': company.id,
                                     }])
                         ],
                     'outputs': [
@@ -173,37 +149,35 @@ class TestCase(unittest.TestCase):
                                     'from_location': production_loc.id,
                                     'to_location': storage_loc.id,
                                     'unit_price': Decimal('10'),
-                                    'currency': currency.id,
-                                    'company': company.id,
                                     }])
                         ],
                     }])
             productions = [production_wo_lot, production_w_lot]
-            production_w_lot2, = self.production.copy([production_w_lot])
+            production_w_lot2, = Production.copy([production_w_lot])
 
-            self.production.wait(productions)
-            assigned = self.production.assign_try(productions)
+            Production.wait(productions)
+            assigned = Production.assign_try(productions)
             self.assertTrue(assigned)
             self.assertTrue(all(i.state == 'assigned' for p in productions
                     for i in p.inputs))
 
             # Production can't be done before configure
             with self.assertRaises(UserError):
-                self.production.run(productions)
+                Production.run(productions)
 
             # Create lot on 'running' state
             config.output_lot_creation = 'running'
             config.output_lot_sequence = lot_sequence
             config.save()
 
-            self.production.run(productions)
+            Production.run(productions)
             self.assertTrue(all(i.state == 'done' for p in productions
                     for i in p.inputs))
             self.assertIsNone(production_wo_lot.outputs[0].lot)
             self.assertIsNotNone(production_w_lot.outputs[0].lot)
             created_lot = production_w_lot.outputs[0].lot
 
-            self.production.done(productions)
+            Production.done(productions)
             self.assertEqual([p.state for p in productions],
                 ['done', 'done'])
 
@@ -213,34 +187,24 @@ class TestCase(unittest.TestCase):
             config.output_lot_creation = 'done'
             config.save()
 
-            self.production.wait([production_w_lot2])
-            assigned = self.production.assign_try([production_w_lot2])
+            Production.wait([production_w_lot2])
+            assigned = Production.assign_try([production_w_lot2])
 
-            self.production.run([production_w_lot2])
+            Production.run([production_w_lot2])
             self.assertTrue(all(i.state == 'done'
                     for i in production_w_lot2.inputs))
             self.assertIsNone(production_w_lot2.outputs[0].lot)
 
-            self.production.done([production_w_lot2])
+            Production.done([production_w_lot2])
             self.assertEqual(production_w_lot2.state, 'done')
             self.assertIsNotNone(production_w_lot2.outputs[0].lot)
 
 
 def suite():
     suite = trytond.tests.test_tryton.suite()
-    #from trytond.modules.company.tests import test_company
-    #exclude_tests = ('test0005views', 'test0006depends',
-    #    'test0020company_recursion', 'test0040user',
-    #    'test0020mon_grouping', 'test0040rate_unicity',
-    #    'test0060compute_nonfinite', 'test0070compute_nonfinite_worounding',
-    #    'test0080compute_same', 'test0090compute_zeroamount',
-    #    'test0100compute_zerorate', 'test0110compute_missingrate',
-    #    'test0120compute_bothmissingrate', 'test0130delete_cascade')
-    #for test in test_company.suite():
-    #    if test not in suite and test.id().split('.')[-1] not in exclude_tests:
-    #        suite.addTest(test)
-    #suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestCase))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestCase))
     suite.addTests(doctest.DocFileSuite('scenario_production_lot_sequence.rst',
         setUp=doctest_setup, tearDown=doctest_teardown, encoding='utf-8',
+            checker=doctest_checker,
             optionflags=doctest.REPORT_ONLY_FIRST_FAILURE))
     return suite
