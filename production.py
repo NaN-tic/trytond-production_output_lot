@@ -178,9 +178,7 @@ class StockMove:
                 if input_expiry_dates:
                     lot.expiry_date = min(input_expiry_dates)
                 else:
-                    expiry_date = lot.on_change_product().get('expiry_date')
-                    if expiry_date:
-                        lot.expiry_date = expiry_date
+                    lot.on_change_product()
         return lot
 
     def _get_output_lot_sequence(self):
