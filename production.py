@@ -1,12 +1,11 @@
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
-from trytond.model import Model, ModelSQL, fields
+from trytond.model import ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
-from trytond.transaction import Transaction
+from trytond.modules.company.model import CompanyValueMixin
 
 __all__ = ['Configuration', 'ConfigurationCompany', 'Production', 'StockMove']
-__metaclass__ = PoolMeta
 
 _OUTPUT_LOT_CREATION = [
     ('running', 'Production in Running'),
@@ -15,71 +14,38 @@ _OUTPUT_LOT_CREATION = [
 
 
 class Configuration:
+    __metaclass__ = PoolMeta
     __name__ = 'production.configuration'
 
-    output_lot_creation = fields.Function(fields.Selection(
+    output_lot_creation = fields.MultiValue(fields.Selection(
             _OUTPUT_LOT_CREATION, 'When Output Lot is created?', required=True,
             help='The Production\'s state in which the Output Lot will be '
             'created automatically, if the Output Product is configured to '
-            'require lot in production.'),
-        'get_company_config', setter='set_company_config')
-    output_lot_sequence = fields.Function(fields.Many2One('ir.sequence',
+            'require lot in production.'))
+    output_lot_sequence = fields.MultiValue(fields.Many2One('ir.sequence',
             'Output Lot Sequence', required=True, domain=[
                 ('company', 'in',
                     [Eval('context', {}).get('company', -1), None]),
                 ('code', '=', 'stock.lot'),
-                ]),
-        'get_company_config', setter='set_company_config')
-
-    @staticmethod
-    def default_output_lot_creation():
-        return 'running'
+                ]))
 
     @classmethod
-    def get_company_config(cls, configs, names):
+    def multivalue_model(cls, field):
         pool = Pool()
-        CompanyConfig = pool.get('production.configuration.company')
-
-        company_id = Transaction().context.get('company')
-        company_configs = CompanyConfig.search([
-                ('company', '=', company_id),
-                ])
-
-        res = {}
-        for fname in names:
-            res[fname] = {
-                configs[0].id: None,
-                }
-            if company_configs:
-                val = getattr(company_configs[0], fname)
-                if isinstance(val, Model):
-                    val = val.id
-                res[fname][configs[0].id] = val
-        return res
+        if field in {'output_lot_creation', 'output_lot_sequence'}:
+            return pool.get('production.configuration.company')
+        return super(Configuration, cls).multivalue_model(field)
 
     @classmethod
-    def set_company_config(cls, configs, name, value):
-        pool = Pool()
-        CompanyConfig = pool.get('production.configuration.company')
-
-        company_id = Transaction().context.get('company')
-        company_configs = CompanyConfig.search([
-                ('company', '=', company_id),
-                ])
-        if company_configs:
-            company_config = company_configs[0]
-        else:
-            company_config = CompanyConfig(company=company_id)
-        setattr(company_config, name, value)
-        company_config.save()
+    def default_output_lot_creation(cls, **pattern):
+        return cls.multivalue_model(
+            'output_lot_creation').default_output_lot_creation()
 
 
-class ConfigurationCompany(ModelSQL):
+class ConfigurationCompany(ModelSQL, CompanyValueMixin):
     'Production Configuration by Company'
     __name__ = 'production.configuration.company'
 
-    company = fields.Many2One('company.company', 'Company', required=True,
-        ondelete='CASCADE', select=True)
     output_lot_creation = fields.Selection([(None, '')] + _OUTPUT_LOT_CREATION,
             'When Output Lot is created?')
     output_lot_sequence = fields.Many2One('ir.sequence',
@@ -88,8 +54,13 @@ class ConfigurationCompany(ModelSQL):
             ('code', '=', 'stock.lot'),
             ], depends=['company'])
 
+    @classmethod
+    def default_output_lot_creation(cls):
+        return 'running'
+
 
 class Production:
+    __metaclass__ = PoolMeta
     __name__ = 'production'
 
     @classmethod
@@ -149,6 +120,7 @@ class Production:
 
 
 class StockMove:
+    __metaclass__ = PoolMeta
     __name__ = 'stock.move'
 
     @classmethod

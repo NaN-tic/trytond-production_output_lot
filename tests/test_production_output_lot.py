@@ -8,7 +8,7 @@ import trytond.tests.test_tryton
 from trytond.exceptions import UserError
 from trytond.pool import Pool
 from trytond.tests.test_tryton import ModuleTestCase, with_transaction
-from trytond.tests.test_tryton import doctest_setup, doctest_teardown
+from trytond.tests.test_tryton import doctest_teardown
 from trytond.tests.test_tryton import doctest_checker
 
 from trytond.modules.company.tests import create_company, set_company
@@ -68,31 +68,33 @@ class TestCase(ModuleTestCase):
                         'type': 'goods',
                         'consumable': True,
                         'list_price': Decimal(10),
-                        'cost_price': Decimal(5),
                         'cost_price_method': 'fixed',
                         'default_uom': kg.id,
                         }, {
                         'name': 'Output Product without Lot',
                         'type': 'goods',
+                        'producible': True,
                         'list_price': Decimal(20),
-                        'cost_price': Decimal(10),
                         'cost_price_method': 'fixed',
                         'default_uom': kg.id,
                         }, {
                         'name': 'Output Product with Lot',
                         'type': 'goods',
+                        'producible': True,
                         'list_price': Decimal(20),
-                        'cost_price': Decimal(10),
                         'cost_price_method': 'fixed',
                         'default_uom': kg.id,
                         }])
             (input_product, output_product_wo_lot,
                 output_product_w_lot) = Product.create([{
                         'template': input_template.id,
+                        'cost_price': Decimal(5),
                         }, {
                         'template': output_template_wo_lot.id,
+                        'cost_price': Decimal(10),
                         }, {
                         'template': output_template_w_lot.id,
+                        'cost_price': Decimal(10),
                         }])
             lot_types = LotType.search([])
             Template_lot_type.create([{
@@ -204,7 +206,7 @@ def suite():
     suite = trytond.tests.test_tryton.suite()
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestCase))
     suite.addTests(doctest.DocFileSuite('scenario_production_lot_sequence.rst',
-        setUp=doctest_setup, tearDown=doctest_teardown, encoding='utf-8',
+            tearDown=doctest_teardown, encoding='utf-8',
             checker=doctest_checker,
             optionflags=doctest.REPORT_ONLY_FIRST_FAILURE))
     return suite
