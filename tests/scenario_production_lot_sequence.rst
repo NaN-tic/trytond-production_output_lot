@@ -147,8 +147,8 @@ Make a production::
     >>> output.lot.number
     u'1'
     >>> output_sequence.reload()
-    >>> output_sequence.number_next
-    2
+    >>> output_sequence.number_next == 2
+    True
 
 
 Make a production which uses the lot from product::
@@ -173,8 +173,8 @@ Make a production which uses the lot from product::
     >>> output.lot.number
     u'1'
     >>> output_sequence.reload()
-    >>> output_sequence.number_next
-    2
+    >>> output_sequence.number_next == 2
+    True
     >>> product_sequence.reload()
-    >>> product_sequence.number_next
-    2
+    >>> product_sequence.number_next == 2
+    True
