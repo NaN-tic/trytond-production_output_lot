@@ -157,6 +157,8 @@ Make a production which uses the lot from product::
     >>> product_sequence.save()
     >>> template.lot_sequence = product_sequence
     >>> template.save()
+    >>> template.reload()
+    >>> product.reload()
     >>> production = Production()
     >>> production.effective_date = yesterday
     >>> production.product = product
@@ -171,10 +173,10 @@ Make a production which uses the lot from product::
     >>> output.state
     u'done'
     >>> output.lot.number
-    u'1'
+    u'2'
     >>> output_sequence.reload()
-    >>> output_sequence.number_next == 2
+    >>> output_sequence.number_next == 3
     True
     >>> product_sequence.reload()
-    >>> product_sequence.number_next == 2
+    >>> product_sequence.number_next == 1
     True
