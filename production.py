@@ -13,8 +13,7 @@ _OUTPUT_LOT_CREATION = [
     ]
 
 
-class Configuration:
-    __metaclass__ = PoolMeta
+class Configuration(metaclass=PoolMeta):
     __name__ = 'production.configuration'
 
     output_lot_creation = fields.MultiValue(fields.Selection(
@@ -59,8 +58,7 @@ class ConfigurationCompany(ModelSQL, CompanyValueMixin):
         return 'running'
 
 
-class Production:
-    __metaclass__ = PoolMeta
+class Production(metaclass=PoolMeta):
     __name__ = 'production'
 
     @classmethod
@@ -119,8 +117,7 @@ class Production:
         return created_lots
 
 
-class StockMove:
-    __metaclass__ = PoolMeta
+class StockMove(metaclass=PoolMeta):
     __name__ = 'stock.move'
 
     @classmethod

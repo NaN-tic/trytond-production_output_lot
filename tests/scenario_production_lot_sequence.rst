@@ -116,7 +116,7 @@ Create an Inventory::
     >>> inventory.save()
     >>> Inventory.confirm([inventory.id], config.context)
     >>> inventory.state
-    u'done'
+    'done'
 
 Configure production sequence::
 
@@ -143,9 +143,9 @@ Make a production::
     >>> production.click('done')
     >>> output, = production.outputs
     >>> output.state
-    u'done'
+    'done'
     >>> output.lot.number
-    u'1'
+    '1'
     >>> output_sequence.reload()
     >>> output_sequence.number_next == 2
     True
@@ -171,9 +171,9 @@ Make a production which uses the lot from product::
     >>> production.click('done')
     >>> output, = production.outputs
     >>> output.state
-    u'done'
+    'done'
     >>> output.lot.number
-    u'2'
+    '2'
     >>> output_sequence.reload()
     >>> output_sequence.number_next == 3
     True
