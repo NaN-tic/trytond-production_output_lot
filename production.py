@@ -139,17 +139,15 @@ class StockMove(metaclass=PoolMeta):
         number = Sequence.get_id(self._get_output_lot_sequence().id)
         lot = Lot(product=self.product, number=number)
 
-        if hasattr(Lot, 'expiry_date'):
+        if hasattr(Lot, 'expiration_date'):
             if self.product.expiry_time:
-                input_expiry_dates = [i.lot.expiry_date
+                input_expiry_dates = [i.lot.expiration_date
                     for i in self.production_output.inputs
-                    if i.lot and i.lot.expiry_date]
+                    if i.lot and i.lot.expiration_date]
                 if input_expiry_dates:
-                    lot.expiry_date = min(input_expiry_dates)
+                    lot.expiration_date = min(input_expiry_dates)
                 else:
-                    expiry_date = lot.on_change_product().get('expiry_date')
-                    if expiry_date:
-                        lot.expiry_date = expiry_date
+                    lot.on_change_product()
         return lot
 
     def _get_output_lot_sequence(self):
