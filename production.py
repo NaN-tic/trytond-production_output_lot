@@ -4,6 +4,8 @@ from trytond.model import ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.modules.company.model import CompanyValueMixin
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 __all__ = ['Configuration', 'ConfigurationCompany', 'Production', 'StockMove']
 
@@ -62,22 +64,13 @@ class Production(metaclass=PoolMeta):
     __name__ = 'production'
 
     @classmethod
-    def __setup__(cls):
-        super(Production, cls).__setup__()
-        cls._error_messages.update({
-                'missing_output_lot_creation_config': (
-                    'The "When Output Lot is created?" or '
-                    '"Output Lot Sequence" Production configuration params '
-                    'are empty.'),
-                })
-
-    @classmethod
     def run(cls, productions):
         pool = Pool()
         Config = pool.get('production.configuration')
         config = Config(1)
         if not config.output_lot_creation:
-            cls.raise_user_error('missing_output_lot_creation_config')
+            raise UserError(gettext(
+                'production_output_lot.missing_output_lot_creation_config'))
 
         super(Production, cls).run(productions)
         if config.output_lot_creation == 'running':
@@ -90,7 +83,8 @@ class Production(metaclass=PoolMeta):
         Config = pool.get('production.configuration')
         config = Config(1)
         if not config.output_lot_creation:
-            cls.raise_user_error('missing_output_lot_creation_config')
+            raise UserError(gettext(
+                'production_output_lot.missing_output_lot_creation_config'))
 
         if config.output_lot_creation == 'done':
             for production in productions:
@@ -101,7 +95,8 @@ class Production(metaclass=PoolMeta):
         Config = Pool().get('production.configuration')
         config = Config(1)
         if not config.output_lot_creation or not config.output_lot_sequence:
-            self.raise_user_error('missing_output_lot_creation_config')
+            raise UserError(gettext(
+                'production_output_lot.missing_output_lot_creation_config'))
 
         created_lots = []
         for output in self.outputs:
@@ -120,13 +115,6 @@ class Production(metaclass=PoolMeta):
 class StockMove(metaclass=PoolMeta):
     __name__ = 'stock.move'
 
-    @classmethod
-    def __setup__(cls):
-        super(StockMove, cls).__setup__()
-        cls._error_messages.update({
-                'no_sequence': ('There is not output lot sequence defined. '
-                    'Please define one in production configuration.'),
-                })
 
     def get_production_output_lot(self):
         pool = Pool()
@@ -159,5 +147,5 @@ class StockMove(metaclass=PoolMeta):
             if sequence:
                 return sequence
         if not config.output_lot_sequence:
-            self.raise_user_error('no_sequence')
+            raise UserError(gettext('production_output_lot.no_sequence'))
         return config.output_lot_sequence
