@@ -4,13 +4,10 @@ this repository contains the full copyright notices and license terms. -->
 <tryton>
     <data grouped="1">
     <record model="ir.message" id="missing_output_lot_creation_config">
-        <field name="text">The "When Output Lot is created?" or
-                  "Output Lot Sequence" Production configuration params
-                  are empty.</field>
+        <field name="text">The "When Output Lot is created?" or "Output Lot Sequence" Production configuration params are empty.</field>
     </record>
     <record model="ir.message" id="no_sequence">
-        <field name="text">There is not output lot sequence defined.
-              Please define one in production configuration.</field>
+        <field name="text">There is not output lot sequence defined. Please define one in production configuration.</field>
     </record>
     </data>
 </tryton>
