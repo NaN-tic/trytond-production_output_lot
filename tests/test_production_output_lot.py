@@ -22,7 +22,6 @@ class TestCase(ModuleTestCase):
     def test0010output_lot_creation(self):
         'Test output lot creation.'
         pool = Pool()
-        LotType = pool.get('stock.lot.type')
         Location = pool.get('stock.location')
         ModelData = pool.get('ir.model.data')
         Product = pool.get('product.product')
@@ -31,7 +30,6 @@ class TestCase(ModuleTestCase):
         Sequence = pool.get('ir.sequence')
         Sequence_type = pool.get('ir.sequence.type')
         Template = pool.get('product.template')
-        Template_lot_type = pool.get('product.template-stock.lot.type')
         Uom = pool.get('product.uom')
 
         # Create Company
@@ -84,6 +82,8 @@ class TestCase(ModuleTestCase):
                         'list_price': Decimal(20),
                         'cost_price_method': 'fixed',
                         'default_uom': kg.id,
+                        'lot_required': ['supplier', 'customer', 'lost_found',
+                            'storage', 'production'],
                         }])
             (input_product, output_product_wo_lot,
                 output_product_w_lot) = Product.create([{
@@ -96,11 +96,6 @@ class TestCase(ModuleTestCase):
                         'template': output_template_w_lot.id,
                         'cost_price': Decimal(10),
                         }])
-            lot_types = LotType.search([])
-            Template_lot_type.create([{
-                    'template': output_template_w_lot.id,
-                    'type': type_.id,
-                    } for type_ in lot_types])
 
             warehouse = Location(Production.default_warehouse())
             storage_loc = warehouse.storage_location
