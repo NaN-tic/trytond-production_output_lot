@@ -26,7 +26,6 @@ Create company::
 Create product::
 
     >>> ProductUom = Model.get('product.uom')
-    >>> LotType = Model.get('stock.lot.type')
     >>> unit, = ProductUom.find([('name', '=', 'Unit')])
     >>> ProductTemplate = Model.get('product.template')
     >>> Product = Model.get('product.product')
@@ -37,8 +36,8 @@ Create product::
     >>> template.type = 'goods'
     >>> template.producible = True
     >>> template.list_price = Decimal(30)
-    >>> template.serial_number = True
-    >>> template.lot_required.extend(LotType.find([]))
+    >>> template.lot_required = ['supplier', 'customer', 'lost_found',
+    ...     'storage', 'production']
     >>> template.save()
     >>> product.template = template
     >>> product.cost_price = Decimal(20)
