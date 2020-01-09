@@ -1,0 +1,30 @@
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
+from trytond.model import ModelView, ModelSQL, DeactivableMixin, fields, Unique
+from trytond.wizard import Wizard, StateView, Button
+from trytond.transaction import Transaction
+from trytond.pyson import Eval
+from trytond.pool import PoolMeta, Pool
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
+
+
+__all__ = ['BOMInput']
+
+class BOMInput(metaclass=PoolMeta):
+    __name__ = 'production.bom.input'
+    use_lot = fields.Boolean('Use Lot')
+
+    @classmethod
+    def validate(cls, boms):
+        super(BOMInput, cls).validate(boms)
+        for bom in boms:
+            bom.check_unique_use_lot_in_bom()
+
+    def check_unique_use_lot_in_bom(self):
+        inputs = self.search([
+            ('bom', '=', self.bom.id),
+            ('use_lot', '=', True)
+            ])
+        if len(inputs) > 1:
+            raise UserError(gettext('production_output_lot.unique_use_lot_in_bom'))

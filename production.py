@@ -47,7 +47,7 @@ class ConfigurationCompany(ModelSQL, CompanyValueMixin):
     'Production Configuration by Company'
     __name__ = 'production.configuration.company'
 
-    output_lot_creation = fields.Selection([(None, '')] + _OUTPUT_LOT_CREATION,
+    output_lot_creation = fields.Selection(_OUTPUT_LOT_CREATION,
             'When Output Lot is created?')
     output_lot_sequence = fields.Many2One('ir.sequence',
         'Output Lot Sequence', domain=[
@@ -94,17 +94,36 @@ class Production(metaclass=PoolMeta):
     def create_output_lots(self):
         Config = Pool().get('production.configuration')
         config = Config(1)
+        Lot = Pool().get('stock.lot')
+
         if not config.output_lot_creation or not config.output_lot_sequence:
             raise UserError(gettext(
                 'production_output_lot.missing_output_lot_creation_config'))
 
         created_lots = []
+        drag_lot = None
+
+        if self.bom:
+            product, = [x for x in self.bom.inputs if x.use_lot == True]
+            inputs = [x for x in self.inputs if x.lot
+                and x.product == product.product]
+            if len(inputs) != 1:
+                raise UserError(gettext(
+                    'production_output_lot.more_than_one_input_lots'))
+            drag_lot = inputs[0].lot
+
         for output in self.outputs:
             if output.lot:
                 continue
-            if output.product.lot_is_required(output.from_location,
-                    output.to_location):
+            if output.product.lot_is_required(output.from_location, output.to_location):
                 lot = output.get_production_output_lot()
+                if drag_lot:
+                    lot.number = drag_lot.number
+                    lot.expiration_date = (drag_lot.expiration_date if
+                        drag_lot.expiration_date else None)
+                    lot.shelf_life_expiration_date = (
+                        drag_lot.shelf_life_expiration_date if
+                        drag_lot.shelf_life_expiration_date else None)
                 lot.save()
                 output.lot = lot
                 output.save()
@@ -114,7 +133,6 @@ class Production(metaclass=PoolMeta):
 
 class StockMove(metaclass=PoolMeta):
     __name__ = 'stock.move'
-
 
     def get_production_output_lot(self):
         pool = Pool()
@@ -128,7 +146,7 @@ class StockMove(metaclass=PoolMeta):
         lot = Lot(product=self.product, number=number)
 
         if hasattr(Lot, 'expiration_date'):
-            if self.product.expiry_time:
+            if self.product.expiration_time:
                 input_expiry_dates = [i.lot.expiration_date
                     for i in self.production_output.inputs
                     if i.lot and i.lot.expiration_date]
