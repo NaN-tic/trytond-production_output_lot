@@ -1,22 +1,10 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "error:production:"
-msgid ""
-"The \"When Output Lot is created?\" or \"Output Lot Sequence\" Production "
-"configuration params are empty."
-msgstr ""
-"No s'han establert els paràmetres de la configuració de la producció \"Quan "
-"es creen els lots de sortida?\" o \"Seqüència lots de sortida\"."
-
-msgctxt "error:stock.move:"
-msgid ""
-"There is not output lot sequence defined. Please define one in production "
-"configuration."
-msgstr ""
-"No s'ha definit cap seqüencia de lot de sortida. Si us plau, definiu-n'hi "
-"una a la configuració de produccions."
+msgctxt "field:production.bom.input,use_lot:"
+msgid "Use Lot"
+msgstr "Utilitzar lot"
 
 msgctxt "field:production.configuration,output_lot_creation:"
 msgid "When Output Lot is created?"
@@ -30,18 +18,6 @@ msgctxt "field:production.configuration.company,company:"
 msgid "Company"
 msgstr "Empresa"
 
-msgctxt "field:production.configuration.company,create_date:"
-msgid "Create Date"
-msgstr "Data creació"
-
-msgctxt "field:production.configuration.company,create_uid:"
-msgid "Create User"
-msgstr "Usuari creació"
-
-msgctxt "field:production.configuration.company,id:"
-msgid "ID"
-msgstr "Identificador"
-
 msgctxt "field:production.configuration.company,output_lot_creation:"
 msgid "When Output Lot is created?"
 msgstr "Quan es creen els lots de sortida?"
@@ -49,18 +25,6 @@ msgstr "Quan es creen els lots de sortida?"
 msgctxt "field:production.configuration.company,output_lot_sequence:"
 msgid "Output Lot Sequence"
 msgstr "Seqüència lots de sortida"
-
-msgctxt "field:production.configuration.company,rec_name:"
-msgid "Name"
-msgstr "Nom"
-
-msgctxt "field:production.configuration.company,write_date:"
-msgid "Write Date"
-msgstr "Data modificació"
-
-msgctxt "field:production.configuration.company,write_uid:"
-msgid "Write User"
-msgstr "Usuari modificació"
 
 msgctxt "help:production.configuration,output_lot_creation:"
 msgid ""
@@ -70,6 +34,32 @@ msgid ""
 msgstr ""
 "L'estat de la producció en el qual es crearan els lots de sortida per "
 "aquells productes configurats per requerir lot a la producció."
+
+msgctxt "model:ir.message,text:missing_output_lot_creation_config"
+msgid ""
+"The \"When Output Lot is created?\" or \"Output Lot Sequence\" Production "
+"configuration params are empty."
+msgstr ""
+"Els paràmetres de configuració de producció \"Quan es crea el lot de "
+"sortida?\" o \"Seqüència de lot de sortida\" estan buits."
+
+msgctxt "model:ir.message,text:more_than_one_input_lots"
+msgid "There is more than one lot in inputs. Please check input moves."
+msgstr ""
+"Hi ha més d'un lot en les entrades. Si us plau verifiqui els moviments "
+"d'entrada."
+
+msgctxt "model:ir.message,text:no_sequence"
+msgid ""
+"There is not output lot sequence defined. Please define one in production "
+"configuration."
+msgstr ""
+"No hi ha seqüència de lot de sortida definida. Si us plau defineixi una en "
+"la configuració de producció."
+
+msgctxt "model:ir.message,text:unique_use_lot_in_bom"
+msgid "Only one input product can have the option to use lot marked."
+msgstr "Només un producte d'entrada pot tenir l'opció d'usar el lot marcat."
 
 msgctxt "model:production.configuration.company,name:"
 msgid "Production Configuration by Company"
@@ -82,10 +72,6 @@ msgstr "Producció en curs"
 msgctxt "selection:production.configuration,output_lot_creation:"
 msgid "Production is Done"
 msgstr "Producció realitzada"
-
-msgctxt "selection:production.configuration.company,output_lot_creation:"
-msgid ""
-msgstr " "
 
 msgctxt "selection:production.configuration.company,output_lot_creation:"
 msgid "Production in Running"

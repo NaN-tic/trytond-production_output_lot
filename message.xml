@@ -3,11 +3,17 @@
 this repository contains the full copyright notices and license terms. -->
 <tryton>
     <data grouped="1">
-    <record model="ir.message" id="missing_output_lot_creation_config">
-        <field name="text">The "When Output Lot is created?" or "Output Lot Sequence" Production configuration params are empty.</field>
-    </record>
-    <record model="ir.message" id="no_sequence">
-        <field name="text">There is not output lot sequence defined. Please define one in production configuration.</field>
-    </record>
+        <record model="ir.message" id="missing_output_lot_creation_config">
+            <field name="text">The "When Output Lot is created?" or "Output Lot Sequence" Production configuration params are empty.</field>
+        </record>
+        <record model="ir.message" id="no_sequence">
+            <field name="text">There is not output lot sequence defined. Please define one in production configuration.</field>
+        </record>
+        <record model="ir.message" id="more_than_one_input_lots">
+            <field name="text">There is more than one lot in inputs. Please check input moves.</field>
+        </record>
+        <record model="ir.message" id="unique_use_lot_in_bom">
+            <field name="text">Only one input product can have the option to use lot marked.</field>
+        </record>
     </data>
 </tryton>
