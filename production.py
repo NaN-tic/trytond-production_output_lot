@@ -117,17 +117,18 @@ class Production(metaclass=PoolMeta):
                 continue
             if output.product.lot_is_required(output.from_location, output.to_location):
                 lot = output.get_production_output_lot()
-                if drag_lot:
-                    lot.number = drag_lot.number
-                    lot.expiration_date = (drag_lot.expiration_date if
-                        drag_lot.expiration_date else None)
-                    lot.shelf_life_expiration_date = (
-                        drag_lot.shelf_life_expiration_date if
-                        drag_lot.shelf_life_expiration_date else None)
-                lot.save()
-                output.lot = lot
-                output.save()
-                created_lots.append(lot)
+                if lot:
+                    if drag_lot:
+                        lot.number = drag_lot.number
+                        lot.expiration_date = (drag_lot.expiration_date if
+                            drag_lot.expiration_date else None)
+                        lot.shelf_life_expiration_date = (
+                            drag_lot.shelf_life_expiration_date if
+                            drag_lot.shelf_life_expiration_date else None)
+                    lot.save()
+                    output.lot = lot
+                    output.save()
+                    created_lots.append(lot)
         return created_lots
 
 
