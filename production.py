@@ -104,13 +104,14 @@ class Production(metaclass=PoolMeta):
         drag_lot = None
 
         if self.bom:
-            product, = [x for x in self.bom.inputs if x.use_lot == True]
-            inputs = [x for x in self.inputs if x.lot
-                and x.product == product.product]
-            if len(inputs) != 1:
-                raise UserError(gettext(
-                    'production_output_lot.more_than_one_input_lots'))
-            drag_lot = inputs[0].lot
+            product = [x for x in self.bom.inputs if x.use_lot == True]
+            if product:
+                inputs = [x for x in self.inputs if x.lot
+                    and x.product == product.product]
+                if len(inputs) != 1:
+                    raise UserError(gettext(
+                        'production_output_lot.more_than_one_input_lots'))
+                drag_lot = inputs[0].lot
 
         for output in self.outputs:
             if output.lot:
