@@ -104,7 +104,7 @@ class Production(metaclass=PoolMeta):
         drag_lot = None
 
         if self.bom:
-            product = [x for x in self.bom.inputs if x.use_lot == True]
+            product, = [x for x in self.bom.inputs if x.use_lot == True]
             if product:
                 inputs = [x for x in self.inputs if x.lot
                     and x.product == product.product]
