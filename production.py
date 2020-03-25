@@ -94,7 +94,6 @@ class Production(metaclass=PoolMeta):
     def create_output_lots(self):
         Config = Pool().get('production.configuration')
         config = Config(1)
-        Lot = Pool().get('stock.lot')
 
         if not config.output_lot_creation or not config.output_lot_sequence:
             raise UserError(gettext(
@@ -104,8 +103,9 @@ class Production(metaclass=PoolMeta):
         drag_lot = None
 
         if self.bom:
-            product, = [x for x in self.bom.inputs if x.use_lot == True]
-            if product:
+            products = [x for x in self.bom.inputs if x.use_lot == True]
+            if products:
+                product = products[0]
                 inputs = [x for x in self.inputs if x.lot
                     and x.product == product.product]
                 if len(inputs) != 1:
