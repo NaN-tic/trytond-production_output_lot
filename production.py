@@ -2,7 +2,7 @@
 # copyright notices and license terms.
 from trytond.model import ModelSQL, fields
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Id
 from trytond.modules.company.model import CompanyValueMixin
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
@@ -27,7 +27,8 @@ class Configuration(metaclass=PoolMeta):
             'Output Lot Sequence', required=True, domain=[
                 ('company', 'in',
                     [Eval('context', {}).get('company', -1), None]),
-                ('code', '=', 'stock.lot'),
+                ('sequence_type', '=', Id('stock_lot',
+                        'sequence_type_stock_lot')),
                 ]))
 
     @classmethod
@@ -52,7 +53,8 @@ class ConfigurationCompany(ModelSQL, CompanyValueMixin):
     output_lot_sequence = fields.Many2One('ir.sequence',
         'Output Lot Sequence', domain=[
             ('company', 'in', [Eval('company'), None]),
-            ('code', '=', 'stock.lot'),
+            ('sequence_type', '=', Id('stock_lot',
+                    'sequence_type_stock_lot')),
             ], depends=['company'])
 
     @classmethod
@@ -139,12 +141,11 @@ class StockMove(metaclass=PoolMeta):
     def get_production_output_lot(self):
         pool = Pool()
         Lot = pool.get('stock.lot')
-        Sequence = pool.get('ir.sequence')
 
         if not self.production_output:
             return
 
-        number = Sequence.get_id(self._get_output_lot_sequence().id)
+        number = self._get_output_lot_sequence().get()
         lot = Lot(product=self.product, number=number)
 
         if hasattr(Lot, 'expiration_date'):
@@ -162,10 +163,8 @@ class StockMove(metaclass=PoolMeta):
         pool = Pool()
         Config = pool.get('production.configuration')
         config = Config(1)
-        if hasattr(self.product, 'lot_sequence'):
-            sequence = self.product.lot_sequence
-            if sequence:
-                return sequence
-        if not config.output_lot_sequence:
+        if self.product.lot_sequence:
+            return self.product.lot_sequence
+        elif not config.output_lot_sequence:
             raise UserError(gettext('production_output_lot.no_sequence'))
         return config.output_lot_sequence

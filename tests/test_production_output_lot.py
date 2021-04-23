@@ -23,42 +23,25 @@ class TestCase(ModuleTestCase):
         'Test output lot creation.'
         pool = Pool()
         Location = pool.get('stock.location')
-        ModelData = pool.get('ir.model.data')
         Product = pool.get('product.product')
         Production = pool.get('production')
         ProductConfig = pool.get('production.configuration')
         Sequence = pool.get('ir.sequence')
-        Sequence_type = pool.get('ir.sequence.type')
+        SequenceType = pool.get('ir.sequence.type')
         Template = pool.get('product.template')
         Uom = pool.get('product.uom')
+        ModelData = pool.get('ir.model.data')
 
         # Create Company
         company = create_company()
         with set_company(company):
             kg, = Uom.search([('name', '=', 'Kilogram')])
-            production_group_id = ModelData.get_id('production',
-                'group_production')
             config = ProductConfig(1)
 
-            if not Sequence_type.search([('code', '=', 'stock.lot')]):
-                Sequence_type.create([{
-                            'name': 'Lot',
-                            'code': 'stock.lot',
-                            'groups': [
-                                ('add', [production_group_id]),
-                                ],
-                            }])
-            sequences = Sequence.search([
-                    ('code', '=', 'stock.lot'),
-                    ])
-            if not sequences:
-                lot_sequence, = Sequence.create([{
-                            'name': 'Lot',
-                            'code': 'stock.lot',
-                            'company': company.id,
-                            }])
-            else:
-                lot_sequence = sequences[0]
+            sequence_type = SequenceType(ModelData.get_id('stock_lot',
+                                'sequence_type_stock_lot'))
+            lot_sequence = Sequence(sequence_type=sequence_type,
+                        name='Lot')
 
             (input_template, output_template_wo_lot,
                 output_template_w_lot) = Template.create([{

@@ -120,17 +120,46 @@ Create an Inventory::
 Configure production sequence::
 
     >>> Sequence = Model.get('ir.sequence')
+    >>> SequenceType = Model.get('ir.sequence.type')
     >>> Config = Model.get('production.configuration')
     >>> config = Config()
     >>> config.output_lot_creation = 'done'
-    >>> output_sequence = Sequence(code='stock.lot', name='Output Sequence')
+    >>> sequence_type, = SequenceType.find([('name', '=', 'Stock Lot')])
+    >>> output_sequence = Sequence(sequence_type=sequence_type,
+    ...     name='Output Sequence')
     >>> output_sequence.save()
     >>> config.output_lot_sequence = output_sequence
     >>> config.save()
 
-Make a production::
+Make a production which uses the lot from product::
 
     >>> Production = Model.get('production')
+    >>> production = Production()
+    >>> production.effective_date = yesterday
+    >>> production.product = product
+    >>> production.bom = bom
+    >>> production.quantity = 2
+    >>> production.click('wait')
+    >>> production.click('assign_try')
+    True
+    >>> production.click('run')
+    >>> production.click('done')
+    >>> output, = production.outputs
+    >>> output.state
+    'done'
+    >>> output.lot.number
+    '1'
+    >>> output_sequence.reload()
+    >>> output.product.lot_sequence.number_next == 2
+    True
+
+Make a production wich uses default production lot sequence::
+
+    >>> template.lot_sequence = None
+    >>> template.save()
+    >>> template.reload()
+    >>> product.reload()
+
     >>> production = Production()
     >>> production.product = product
     >>> production.bom = bom
@@ -147,35 +176,4 @@ Make a production::
     '1'
     >>> output_sequence.reload()
     >>> output_sequence.number_next == 2
-    True
-
-
-Make a production which uses the lot from product::
-
-    >>> product_sequence = Sequence(code='stock.lot', name='Product Sequence')
-    >>> product_sequence.save()
-    >>> template.lot_sequence = product_sequence
-    >>> template.save()
-    >>> template.reload()
-    >>> product.reload()
-    >>> production = Production()
-    >>> production.effective_date = yesterday
-    >>> production.product = product
-    >>> production.bom = bom
-    >>> production.quantity = 2
-    >>> production.click('wait')
-    >>> production.click('assign_try')
-    True
-    >>> production.click('run')
-    >>> production.click('done')
-    >>> output, = production.outputs
-    >>> output.state
-    'done'
-    >>> output.lot.number
-    '2'
-    >>> output_sequence.reload()
-    >>> output_sequence.number_next == 3
-    True
-    >>> product_sequence.reload()
-    >>> product_sequence.number_next == 1
     True
