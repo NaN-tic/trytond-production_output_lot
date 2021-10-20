@@ -52,7 +52,7 @@ class ConfigurationCompany(ModelSQL, CompanyValueMixin):
             'When Output Lot is created?')
     output_lot_sequence = fields.Many2One('ir.sequence',
         'Output Lot Sequence', domain=[
-            ('company', 'in', [Eval('company'), None]),
+            ('company', 'in', [Eval('company', -1), None]),
             ('sequence_type', '=', Id('stock_lot',
                     'sequence_type_stock_lot')),
             ], depends=['company'])
