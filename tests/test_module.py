@@ -1,21 +1,17 @@
-#!/usr/bin/env python
-# The COPYRIGHT file at the top level of this repository contains the full
-# copyright notices and license terms.
-import unittest
+
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
+
 from decimal import Decimal
-import doctest
-import trytond.tests.test_tryton
 from trytond.exceptions import UserError
 from trytond.pool import Pool
 from trytond.tests.test_tryton import ModuleTestCase, with_transaction
-from trytond.tests.test_tryton import doctest_teardown
-from trytond.tests.test_tryton import doctest_checker
 
-from trytond.modules.company.tests import create_company, set_company
+from trytond.modules.company.tests import create_company, set_company, CompanyTestMixin
 
 
-class TestCase(ModuleTestCase):
-    'Test module'
+class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
+    'Test ProductionOutputLot module'
     module = 'production_output_lot'
 
     @with_transaction()
@@ -180,11 +176,4 @@ class TestCase(ModuleTestCase):
             self.assertIsNotNone(production_w_lot2.outputs[0].lot)
 
 
-def suite():
-    suite = trytond.tests.test_tryton.suite()
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestCase))
-    suite.addTests(doctest.DocFileSuite('scenario_production_lot_sequence.rst',
-            tearDown=doctest_teardown, encoding='utf-8',
-            checker=doctest_checker,
-            optionflags=doctest.REPORT_ONLY_FIRST_FAILURE))
-    return suite
+del ModuleTestCase
