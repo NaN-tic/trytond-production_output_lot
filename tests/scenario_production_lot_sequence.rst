@@ -122,7 +122,7 @@ Configure production sequence::
     >>> Sequence = Model.get('ir.sequence')
     >>> SequenceType = Model.get('ir.sequence.type')
     >>> Config = Model.get('production.configuration')
-    >>> config = Config()
+    >>> config = Config(1)
     >>> config.output_lot_creation = 'done'
     >>> sequence_type, = SequenceType.find([('name', '=', 'Stock Lot')])
     >>> output_sequence = Sequence(sequence_type=sequence_type,
