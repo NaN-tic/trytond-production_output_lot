@@ -93,6 +93,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
                                     'quantity': 10,
                                     'from_location': storage_loc.id,
                                     'to_location': production_loc.id,
+                                    'currency': company.currency.id,
                                     }])
                         ],
                     'outputs': [
@@ -103,6 +104,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
                                     'from_location': production_loc.id,
                                     'to_location': storage_loc.id,
                                     'unit_price': Decimal('10'),
+                                    'currency': company.currency.id,
                                     }])
                         ],
                     }, {
@@ -115,6 +117,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
                                     'quantity': 10,
                                     'from_location': storage_loc.id,
                                     'to_location': production_loc.id,
+                                    'currency': company.currency.id,
                                     }])
                         ],
                     'outputs': [
@@ -125,6 +128,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
                                     'from_location': production_loc.id,
                                     'to_location': storage_loc.id,
                                     'unit_price': Decimal('10'),
+                                    'currency': company.currency.id,
                                     }])
                         ],
                     }])
