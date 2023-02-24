@@ -136,8 +136,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
             production_w_lot2, = Production.copy([production_w_lot])
 
             Production.wait(productions)
-            assigned = Production.assign_try(productions)
-            self.assertTrue(assigned)
+            Production.assign_try(productions)
             self.assertTrue(all(i.state == 'assigned' for p in productions
                     for i in p.inputs))
 
@@ -168,7 +167,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
             config.save()
 
             Production.wait([production_w_lot2])
-            assigned = Production.assign_try([production_w_lot2])
+            Production.assign_try([production_w_lot2])
 
             Production.run([production_w_lot2])
             self.assertTrue(all(i.state == 'done'
