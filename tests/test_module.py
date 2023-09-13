@@ -89,7 +89,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
                     'inputs': [
                         ('create', [{
                                     'product': input_product.id,
-                                    'uom': kg.id,
+                                    'unit': kg.id,
                                     'quantity': 10,
                                     'from_location': storage_loc.id,
                                     'to_location': production_loc.id,
@@ -99,7 +99,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
                     'outputs': [
                         ('create', [{
                                     'product': output_product_wo_lot.id,
-                                    'uom': kg.id,
+                                    'unit': kg.id,
                                     'quantity': 5,
                                     'from_location': production_loc.id,
                                     'to_location': storage_loc.id,
@@ -113,7 +113,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
                     'inputs': [
                         ('create', [{
                                     'product': input_product.id,
-                                    'uom': kg.id,
+                                    'unit': kg.id,
                                     'quantity': 10,
                                     'from_location': storage_loc.id,
                                     'to_location': production_loc.id,
@@ -123,7 +123,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
                     'outputs': [
                         ('create', [{
                                     'product': output_product_w_lot.id,
-                                    'uom': kg.id,
+                                    'unit': kg.id,
                                     'quantity': 5,
                                     'from_location': production_loc.id,
                                     'to_location': storage_loc.id,
