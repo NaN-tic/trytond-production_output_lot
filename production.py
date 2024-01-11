@@ -55,7 +55,7 @@ class ConfigurationCompany(ModelSQL, CompanyValueMixin):
             ('company', 'in', [Eval('company', -1), None]),
             ('sequence_type', '=', Id('stock_lot',
                     'sequence_type_stock_lot')),
-            ], depends=['company'])
+            ])
 
     @classmethod
     def default_output_lot_creation(cls):
