@@ -142,7 +142,7 @@ Make a production which uses the lot from product::
     >>> production.click('wait')
     >>> production.click('assign_try')
     >>> production.click('run')
-    >>> production.click('done')
+    >>> production.click('do')
     >>> output, = production.outputs
     >>> output.state
     'done'
@@ -166,7 +166,7 @@ Make a production wich uses default production lot sequence::
     >>> production.click('wait')
     >>> production.click('assign_try')
     >>> production.click('run')
-    >>> production.click('done')
+    >>> production.click('do')
     >>> output, = production.outputs
     >>> output.state
     'done'

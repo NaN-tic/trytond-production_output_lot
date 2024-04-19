@@ -156,7 +156,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
             self.assertIsNotNone(production_w_lot.outputs[0].lot)
             created_lot = production_w_lot.outputs[0].lot
 
-            Production.done(productions)
+            Production.do(productions)
             self.assertEqual([p.state for p in productions],
                 ['done', 'done'])
 
@@ -174,7 +174,7 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
                     for i in production_w_lot2.inputs))
             self.assertIsNone(production_w_lot2.outputs[0].lot)
 
-            Production.done([production_w_lot2])
+            Production.do([production_w_lot2])
             self.assertEqual(production_w_lot2.state, 'done')
             self.assertIsNotNone(production_w_lot2.outputs[0].lot)
 

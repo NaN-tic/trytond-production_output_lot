@@ -80,7 +80,7 @@ class Production(metaclass=PoolMeta):
                 production.create_output_lots()
 
     @classmethod
-    def done(cls, productions):
+    def do(cls, productions):
         pool = Pool()
         Config = pool.get('production.configuration')
         config = Config(1)
@@ -91,7 +91,7 @@ class Production(metaclass=PoolMeta):
         if config.output_lot_creation == 'done':
             for production in productions:
                 production.create_output_lots()
-        super(Production, cls).done(productions)
+        super(Production, cls).do(productions)
 
     def create_output_lots(self):
         Config = Pool().get('production.configuration')
