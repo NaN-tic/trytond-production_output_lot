@@ -93,7 +93,6 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
                                     'quantity': 10,
                                     'from_location': storage_loc.id,
                                     'to_location': production_loc.id,
-                                    'currency': company.currency.id,
                                     }])
                         ],
                     'outputs': [
@@ -117,7 +116,6 @@ class ProductionOutputLotTestCase(CompanyTestMixin, ModuleTestCase):
                                     'quantity': 10,
                                     'from_location': storage_loc.id,
                                     'to_location': production_loc.id,
-                                    'currency': company.currency.id,
                                     }])
                         ],
                     'outputs': [
