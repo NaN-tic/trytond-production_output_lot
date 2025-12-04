@@ -3,9 +3,7 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta
 from trytond.i18n import gettext
-from trytond.exceptions import UserError
-
-__all__ = ['BOMInput']
+from trytond.model.exceptions import ValidationError
 
 
 class BOMInput(metaclass=PoolMeta):
@@ -14,7 +12,7 @@ class BOMInput(metaclass=PoolMeta):
 
     @classmethod
     def validate(cls, boms):
-        super(BOMInput, cls).validate(boms)
+        super().validate(boms)
         for bom in boms:
             bom.check_unique_use_lot_in_bom()
 
@@ -24,5 +22,5 @@ class BOMInput(metaclass=PoolMeta):
             ('use_lot', '=', True)
             ])
         if len(inputs) > 1:
-            raise UserError(
+            raise ValidationError(
                 gettext('production_output_lot.unique_use_lot_in_bom'))
