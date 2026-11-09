@@ -1,0 +1,87 @@
+#
+msgid ""
+msgstr ""
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "field:production.bom.input,use_lot:"
+msgid "Use Lot"
+msgstr "Tételszám használata"
+
+msgctxt "field:production.configuration,output_lot_creation:"
+msgid "When Output Lot is created?"
+msgstr "Mikor jöjjön létre a kimenő tételszám?"
+
+msgctxt "field:production.configuration,output_lot_sequence:"
+msgid "Output Lot Sequence"
+msgstr "Kimenő tételszám sorszámozása"
+
+msgctxt "field:production.configuration.company,company:"
+msgid "Company"
+msgstr "Cég"
+
+msgctxt "field:production.configuration.company,output_lot_creation:"
+msgid "When Output Lot is created?"
+msgstr "Mikor jöjjön létre a kimenő tételszám?"
+
+msgctxt "field:production.configuration.company,output_lot_sequence:"
+msgid "Output Lot Sequence"
+msgstr "Kimenő tételszám sorszámozása"
+
+msgctxt "help:production.configuration,output_lot_creation:"
+msgid ""
+"The Production's state in which the Output Lot will be created "
+"automatically, if the Output Product is configured to require lot in "
+"production."
+msgstr ""
+"Az a gyártási állapot, amelyben a kimenő tételszám automatikusan létrejön, "
+"ha a kimenő termék gyártásához kötelező a tételszám."
+
+msgctxt "model:ir.message,text:missing_output_lot_creation_config"
+msgid ""
+"The \"When Output Lot is created?\" or \"Output Lot Sequence\" Production "
+"configuration params are empty."
+msgstr ""
+"A gyártási beállításokban a „Mikor jöjjön létre a kimenő tételszám?” vagy a "
+"„Kimenő tételszám sorszámozása” paraméter üres."
+
+msgctxt "model:ir.message,text:more_than_one_input_lots"
+msgid "There is more than one lot in inputs. Please check input moves."
+msgstr ""
+"A bemeneteken egynél több tételszám található. Ellenőrizze a bemenő "
+"készletmozgásokat."
+
+msgctxt "model:ir.message,text:no_sequence"
+msgid ""
+"There is not output lot sequence defined. Please define one in production "
+"configuration."
+msgstr ""
+"Nincs megadva kimenő tételszám-sorszámozás. Állítsa be a gyártási "
+"beállításokban."
+
+msgctxt "model:ir.message,text:unique_use_lot_in_bom"
+msgid "Only one input product can have the option to use lot marked."
+msgstr "Csak egy bemenő terméknél jelölhető be a tételszám használata."
+
+msgctxt "model:production.configuration.company,name:"
+msgid "Production Configuration by Company"
+msgstr "Gyártási beállítások vállalatonként"
+
+msgctxt "selection:production.configuration,output_lot_creation:"
+msgid "Production in Running"
+msgstr "Gyártás folyamatban"
+
+msgctxt "selection:production.configuration,output_lot_creation:"
+msgid "Production is Done"
+msgstr "Gyártás kész"
+
+msgctxt "selection:production.configuration.company,output_lot_creation:"
+msgid "Production in Running"
+msgstr "Gyártás folyamatban"
+
+msgctxt "selection:production.configuration.company,output_lot_creation:"
+msgid "Production is Done"
+msgstr "Gyártás kész"
